@@ -1,7 +1,32 @@
 <!DOCTYPE html>
+
 <head>
     <title>Halow</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
+
 <body>
-    <h1>tere</h1>
+    <div style="display: flex; justify-content: center;">
+            <div class="card darken-1" style="width: 50%;">
+                <form class="card-content white-text" method="post" action="/">
+                    <span class="card-title" style="color: black;">ToDo list</span>
+                    <div class="input-field s6">
+                        <input placeholder="Task" id="task" type="text" name="task"></input>
+                        <label for="task">Insert task</label>
+                    </div>
+                    <button type="submit" class="waves-effect waves-light btn">ADD TASK</button>  
+                </form>
+                <div class="card-action">
+                    <ul class="collection">
+                        <% tasks.forEach((tasks) => { %>
+                            <li class="collection-item"><%= tasks.task %></li>
+                        <% }) %>
+                      </ul>
+                </div>
+            </div>
+    </div>
 </body>
