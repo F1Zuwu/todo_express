@@ -6,7 +6,7 @@ const port = 8080
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded({ extended: true }))
 
 const readFile = (filename) => {
     return new Promise((resolve, reject) => {
@@ -15,8 +15,6 @@ const readFile = (filename) => {
                 console.error(err)
                 return;
             }
-
-            console.log(data)
 
             const tasks = JSON.parse(data)
             resolve(tasks)
@@ -27,31 +25,59 @@ const readFile = (filename) => {
 app.get('/', (req, res) => {
     readFile("./tasks.json")
         .then(tasks => {
-            res.render('index', { tasks: tasks })
+            res.render('index', { tasks: tasks, error: null })
         })
 })
 
 app.post("/", (req, res) => {
-    readFile("./tasks.json")
+    let error = null
+    if (req.body.task === "") {
+        error = "Please insert correct task data"
+        readFile("./tasks.json")
+            .then(tasks => {
+                res.render('index', { tasks: tasks, error: error })
+            })
+    } else {
+        readFile("./tasks.json")
+            .then(tasks => {
+                const newTask = {
+                    "id": crypto.randomUUID(),
+                    "task": req.body.task
+                }
+
+                tasks.push(newTask)
+                const data = JSON.stringify(tasks, null, 2)
+                fs.writeFile('./tasks.json', data, err => {
+                    if (err) {
+                        console.log(err)
+                        return;
+                    } else {
+                        console.log("saved")
+                    }
+
+                    res.redirect('/')
+                })
+            })
+    }
+})
+
+app.get("/delete-task/:taskId", (req, res) => {
+    let deletedTaskId = req.params.taskId
+    readFile('./tasks.json')
         .then(tasks => {
-            const newTask = {
-                "id" : crypto.randomUUID(),
-                "task": req.body.task
-            }
-
-            console.log(newTask)
-
-            tasks.push(newTask)
-            const data = JSON.stringify(tasks, null, 2)
-            fs.writeFile('./tasks.json', data, err => {
+            tasks.forEach((task, index) => {
+                if (task.id === deletedTaskId) {
+                    tasks.splice(index, 1)
+                }
+            });
+            data = JSON.stringify(tasks, null, 2)
+            fs.writeFile('./tasks.json', data, "utf-8", err => {
                 if (err) {
                     console.log(err)
                     return;
-                } else {
-                    console.log("saved")
                 }
 
-                res.redirect('/')
+                res.redirect("/")
             })
         })
 })

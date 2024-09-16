@@ -16,6 +16,13 @@
     <div style="display: flex; justify-content: center;">
             <div class="card darken-1" style="width: 50%;">
                 <form class="card-content white-text" method="POST" action="/">
+                    <% if(error !== null) { %>
+                        <div class="row teal lighten-4">
+                            <div class="col s12">
+                                <p class="center-align"><%= error %></p>
+                            </div>
+                        </div>
+                    <% } %>
                     <span class="card-title" style="color: black;">ToDo list</span>
                     <div class="input-field s6">
                         <input placeholder="Task" id="task" type="text" name="task"></input>
