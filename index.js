@@ -34,20 +34,9 @@ app.get('/', (req, res) => {
 app.post("/", (req, res) => {
     readFile("./tasks.json")
         .then(tasks => {
-
-            console.log(tasks[tasks.lenght - 1])
-
-            let index = null
-
-            if (tasks.lenght === 0) {
-                index = 0
-            } else {
-                index = tasks[tasks.lenght - 1].id + 1;
-            }
-
             const newTask = {
-                "id" : index,
-                "task": req.body.tasks
+                "id" : crypto.randomUUID(),
+                "task": req.body.task
             }
 
             console.log(newTask)

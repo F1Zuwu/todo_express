@@ -5,6 +5,9 @@
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
@@ -12,18 +15,23 @@
 <body>
     <div style="display: flex; justify-content: center;">
             <div class="card darken-1" style="width: 50%;">
-                <form class="card-content white-text" method="post" action="/">
+                <form class="card-content white-text" method="POST" action="/">
                     <span class="card-title" style="color: black;">ToDo list</span>
                     <div class="input-field s6">
                         <input placeholder="Task" id="task" type="text" name="task"></input>
                         <label for="task">Insert task</label>
                     </div>
-                    <button type="submit" class="waves-effect waves-light btn">ADD TASK</button>  
+                    <input type="submit" class="waves-effect waves-light btn" value="ADD TASK"></input>  
                 </form>
                 <div class="card-action">
                     <ul class="collection">
                         <% tasks.forEach((tasks) => { %>
-                            <li class="collection-item"><%= tasks.task %></li>
+                            <li class="collection-item">
+                                <%= tasks.task %>
+                            <a href="delete-task/<%= tasks.id %>" class="secondary-content">
+                                <i class="material-icons">delete</i>
+                            </a>
+                        </li>
                         <% }) %>
                       </ul>
                 </div>
