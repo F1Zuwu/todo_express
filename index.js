@@ -8,6 +8,8 @@ app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }))
 
+var CurrentID = null
+
 const readFile = (filename) => {
     return new Promise((resolve, reject) => {
         fs.readFile(filename, "utf8", (err, data) => {
@@ -80,6 +82,47 @@ app.get("/delete-task/:taskId", (req, res) => {
                 res.redirect("/")
             })
         })
+})
+
+function updateTask(jsonData, itemId, newTask) {
+    let data = JSON.parse(jsonData);
+
+    for (let item of data) {
+        if (item.id === itemId) {
+            item.task = newTask;
+            break;
+        }
+    }
+
+    return JSON.stringify(data, null, 2);
+}
+
+app.get("/edit/:taskId", (req, res) => {
+    res.render('edit', { error: null })
+    CurrentID = req.params.taskId
+})
+
+app.post("/edit", (req, res) => {
+    const EditVal = req.body.task
+    var error = "Field cannot be empty"
+    if (EditVal === "") {
+        res.render('edit', { error: error })
+    } else {
+    readFile('./tasks.json')
+        .then(tasks => {
+            const updatedJson = updateTask(JSON.stringify(tasks), CurrentID, EditVal);
+
+            // Write the updated JSON back to the file
+            fs.writeFile("./tasks.json", updatedJson, 'utf8', (err) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                console.log("Saved!");
+                res.redirect("/")
+            });
+        })
+    }
 })
 
 app.listen(port, () => {
