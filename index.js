@@ -102,6 +102,18 @@ app.get("/edit/:taskId", (req, res) => {
     CurrentID = req.params.taskId
 })
 
+app.get("/delete-all", (req, res) => {
+    const data = []
+    fs.writeFile("./tasks.json", JSON.stringify(data), 'utf8', (err) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        console.log("Deleted all!");
+        res.redirect("/")
+    });
+})
+
 app.post("/edit", (req, res) => {
     const EditVal = req.body.task
     var error = "Field cannot be empty"
